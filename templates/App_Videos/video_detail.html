@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{ video.title }}</h2>
+
+    <!-- Embedded YouTube video using the extracted video ID -->
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ youtube_video_id }}" frameborder="0" allowfullscreen></iframe>
+
+    <p>
+        <h4>Description:</h4>
+        {{ video.description|linebreaks }}
+    </p>
+
+    <h3>Comments</h3>
+    <ul>
+        {% for comment in comments %}
+            <li>{{ comment.user.username }} - {{ comment.text }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Add comment form -->
+    <form method="post" action="{% url 'App_Videos:add_comment' video.id %}">
+        {% csrf_token %}
+        <textarea name="comment_text" required></textarea>
+        <button type="submit">Add Comment</button>
+    </form>
+
+    <!-- Feedback buttons -->
+    <a href="{% url 'App_Videos:add_feedback' video.id %}?like=True">Like</a>
+    <a href="{% url 'App_Videos:add_feedback' video.id %}?dislike=True">Dislike</a>
+
+{% endblock %}
